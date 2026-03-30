@@ -1,4 +1,4 @@
-package com.lms.demo.dto;
+package com.lms.demo.dto.authdto;
 
 import lombok.Data;
 

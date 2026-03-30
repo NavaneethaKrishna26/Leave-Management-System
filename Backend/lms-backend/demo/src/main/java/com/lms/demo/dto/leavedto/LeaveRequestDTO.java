@@ -1,4 +1,4 @@
-package com.lms.demo.dto;
+package com.lms.demo.dto.leavedto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
