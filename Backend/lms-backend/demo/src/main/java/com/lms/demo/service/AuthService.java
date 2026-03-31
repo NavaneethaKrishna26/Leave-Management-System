@@ -11,15 +11,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    private final EmployeeRepository employeeRepository;
-    private final PasswordEncoder encoder;
+
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
-    public AuthService(EmployeeRepository employeeRepository, PasswordEncoder encoder,
-                       JwtUtil jwtUtil, AuthenticationManager authManager) {
-        this.employeeRepository = employeeRepository;
-
-        this.encoder = encoder;
+    public AuthService(JwtUtil jwtUtil, AuthenticationManager authManager) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
     }
