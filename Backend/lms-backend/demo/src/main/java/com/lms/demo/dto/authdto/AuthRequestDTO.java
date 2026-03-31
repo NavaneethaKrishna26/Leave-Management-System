@@ -12,4 +12,5 @@ public class AuthRequestDTO
     @NotBlank(message = "password should not be empty")
     @Size(min=6,message = "Password must be at least 6 characters")
     private String password;
+
 }

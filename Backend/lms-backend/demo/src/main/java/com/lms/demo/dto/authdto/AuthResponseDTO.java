@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class AuthResponseDTO{
     private String token;
-
-    public AuthResponseDTO(String s) {
+    private String role;
+    public AuthResponseDTO(String s, String role) {
         this.token=s;
+        this.role=role;
     }
 }

@@ -1,5 +1,7 @@
 package com.lms.demo.service;
 
+import com.lms.demo.entity.Employee;
+import com.lms.demo.exception.ResourceNotFoundException;
 import com.lms.demo.security.JwtUtil;
 import com.lms.demo.dto.authdto.AuthRequestDTO;
 import com.lms.demo.dto.authdto.AuthResponseDTO;
@@ -25,8 +27,11 @@ public class AuthService {
 
     public AuthResponseDTO login(@Valid AuthRequestDTO req) {
         authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getEmail(),
-                        req.getPassword()));
-        return new AuthResponseDTO(jwtUtil.generateToken(req.getEmail()));
+                new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
+        );
+        // Only reached if authentication succeeds
+        Employee emp = employeeRepository.findByEmail(req.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return new AuthResponseDTO(jwtUtil.generateToken(req.getEmail()), emp.getRole().name());
     }
 }

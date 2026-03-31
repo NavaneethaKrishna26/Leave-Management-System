@@ -112,7 +112,7 @@ public class LeaveService {
         dto.setReason(leave.getReason());
         dto.setStatus(leave.getStatus().name());
         dto.setEmployeeName(leave.getEmployee().getName());
-
+        if (leave.getReviewedBy() != null) dto.setReviewedBy(leave.getReviewedBy().getName());
         return dto;
     }
 }
