@@ -1,5 +1,6 @@
 package com.lms.demo.service;
 
+import com.lms.demo.security.JwtUtil;
 import com.lms.demo.dto.authdto.AuthRequestDTO;
 import com.lms.demo.dto.authdto.AuthResponseDTO;
 import com.lms.demo.repository.EmployeeRepository;
@@ -11,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-
+    private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
-    public AuthService(JwtUtil jwtUtil, AuthenticationManager authManager) {
+    public AuthService(JwtUtil jwtUtil, AuthenticationManager authManager, EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
+        this.employeeRepository=employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthResponseDTO login(@Valid AuthRequestDTO req) {

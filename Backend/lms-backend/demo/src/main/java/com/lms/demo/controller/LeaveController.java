@@ -1,5 +1,6 @@
 package com.lms.demo.controller;
 
+import com.lms.demo.security.CustomUserDetails;
 import com.lms.demo.dto.ApiResponse;
 import com.lms.demo.dto.leavedto.LeaveRequestDTO;
 import com.lms.demo.dto.leavedto.LeaveResponseDTO;
@@ -7,11 +8,10 @@ import com.lms.demo.service.LeaveService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/leaves")
@@ -28,9 +28,10 @@ public class LeaveController {
     @PostMapping("/apply")
     public ResponseEntity<ApiResponse<LeaveResponseDTO>> applyLeave(
             @Valid @RequestBody LeaveRequestDTO request,
-            Authentication auth) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        LeaveResponseDTO response = leaveService.applyLeave(request, auth.getEmail());
+        String email = userDetails.getUsername();
+        LeaveResponseDTO response = leaveService.applyLeave(request, email);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Leave applied successfully")
@@ -41,9 +42,10 @@ public class LeaveController {
     @PreAuthorize("hasRole('EMPLOYEE') or hasRole('MANAGER')")
     @GetMapping("/my")
     public ResponseEntity<ApiResponse<List<LeaveResponseDTO>>> getMyLeaves(
-            Authentication auth) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        List<LeaveResponseDTO> leaves = leaveService.getMyLeaves(auth.getEmail());
+        String email = userDetails.getUsername();
+        List<LeaveResponseDTO> leaves = leaveService.getMyLeaves(email);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, leaves, "My leaves fetched")
@@ -54,9 +56,10 @@ public class LeaveController {
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/team")
     public ResponseEntity<ApiResponse<List<LeaveResponseDTO>>> getTeamLeaves(
-            Authentication auth) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        List<LeaveResponseDTO> leaves = leaveService.getTeamLeaves(auth.getEmail());
+        String email = userDetails.getUsername();
+        List<LeaveResponseDTO> leaves = leaveService.getTeamLeaves(email);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, leaves, "Team leaves fetched")
@@ -68,9 +71,9 @@ public class LeaveController {
     @PutMapping("/{id}/approve")
     public ResponseEntity<ApiResponse<LeaveResponseDTO>> approveLeave(
             @PathVariable Long id,
-            Authentication auth) {
-
-        LeaveResponseDTO response = leaveService.approveLeave(id, auth.getName());
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getUsername();
+        LeaveResponseDTO response = leaveService.approveLeave(id, email);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Leave approved")
@@ -82,9 +85,9 @@ public class LeaveController {
     @PutMapping("/{id}/reject")
     public ResponseEntity<ApiResponse<LeaveResponseDTO>> rejectLeave(
             @PathVariable Long id,
-            Authentication auth) {
-
-        LeaveResponseDTO response = leaveService.rejectLeave(id, auth.getName());
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String email = userDetails.getUsername();
+        LeaveResponseDTO response = leaveService.rejectLeave(id, email);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Leave rejected")
