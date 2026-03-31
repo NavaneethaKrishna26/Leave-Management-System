@@ -16,12 +16,17 @@ public class Leave {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private LocalDate fromDate;
 
+    @Column(nullable = false)
     private LocalDate toDate;
 
+    @Column(nullable = false)
     private String reason;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable =false)
     private Status status;
 
 
